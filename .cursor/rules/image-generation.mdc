@@ -1,0 +1,52 @@
+---
+globs: books/**/*.md
+alwaysApply: false
+---
+# Rule: AI Image Generation Handoff (Nano Banana 2)
+
+## Context
+When writing stories, chapters, or scenes, we often need visual illustrations to accompany the text. Because this IDE cannot generate images directly, you (the AI) must prepare the text and output specific image-generation prompts for the user to copy/paste into the Gemini Web UI (using the Nano Banana 2 model).
+
+## Triggers
+Activate this skill whenever:
+1. The user explicitly asks for an image prompt.
+2. A natural break or highly visual moment occurs in the story being drafted (aim for roughly 1 illustration per major scene or chapter, unless instructed otherwise).
+
+## Execution Steps
+
+### 1. Insert Text Placeholder
+When you identify the need for an image, insert a clear Markdown image placeholder directly into the story text. Use this exact format so the user knows where the generated image file will eventually go:
+`![[Illustration: Brief 3-4 word description]](./assets/pending-image-name.png)`
+
+### 2. Generate the Session Seed Prompt (If explicitly requested or starting a new book)
+Because Nano Banana 2 operates in a chat interface, it needs a "Seed Prompt" to lock in the art style, aspect ratio, and character designs for consistency. If the user is starting a new session, **save** this as `images/image-context.md` (or append under a `## Session seed` heading) and use the following template filled out with the story's context. You may also output a markdown block titled `### 🎨 Gemini Session Seed Prompt` in chat if helpful.
+
+> "I am creating illustrations for a children's book. For all image generation requests in this chat, please strictly adhere to the following style and character constraints:
+> 
+> **Art Style:** [Insert specific style, e.g., vibrant watercolor, classic Disney 2D, soft pastel picture book, Eric Carle collage style, etc.]
+> **Aspect Ratio:** [e.g., 16:9 for landscape spreads, 1:1 for square pages]
+> **Tone/Vibe:** [e.g., whimsical, slightly spooky, warm and cozy]
+> 
+> **Character Sheets:**
+> *   **[Character A Name]:** [Highly detailed physical description: age, hair color/style, specific clothing, distinguishing features].
+> *   **[Character B Name]:** [Highly detailed physical description].
+> 
+> Please acknowledge these constraints. I will provide the specific scenes next."
+
+### 3. Generate the Specific Image Prompt
+Hand off copy-paste-ready prompts as **Markdown files under this book’s `images/` directory** (see `AGENTS.md` → Story and book layout): one file per illustration is typical (e.g. `images/page-1-image.md`). Put shared/session context in `images/image-context.md` so per-image files stay short.
+
+Each per-image file should include what the author needs to paste into the Gemini Web UI (and may mirror the structure below). You may still add a brief note in chat pointing at the saved path(s).
+
+Nano Banana 2 produces the best results with dense, descriptive language focusing on Subject, Action, Setting, and Lighting. It does not need the art style repeated if the Seed Prompt was used, but repeating core character traits ensures consistency. 
+
+Format the **content** of each prompt file like this (adapt filenames to the book):
+
+**For Placeholder:** `[Brief 3-4 word description]`
+**Prompt for Gemini:** 
+> "Generate an image of [Character Name, repeating 2-3 core physical traits like 'a 6-year-old boy with messy red hair and a yellow raincoat'] [Action/Pose, e.g., reaching up to grab a glowing blue apple] in [Setting, e.g., a dense, misty forest with oversized ferns]. [Lighting/Atmosphere, e.g., warm dappled sunlight filtering through the canopy, magical glowing particles in the air]."
+
+## Rules & Constraints
+*   **Never** attempt to write code to generate the image (no Python/Node scripts) unless explicitly asked.
+*   **Never** use raw DALL-E/Midjourney prompt jargon like "masterpiece, 8k, unreal engine, --v 6". Nano Banana 2 prefers natural, descriptive English.
+*   Always ensure the character descriptions in the prompt match the current state of the story (e.g., if the character fell in mud in the previous paragraph, include "covered in mud" in the prompt).
