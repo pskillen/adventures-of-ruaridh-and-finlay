@@ -1,4 +1,4 @@
-# Mum (Beth, Bethan)
+# Character: Mum (Beth, Bethan)
 
 ## Core Identity
 
@@ -7,6 +7,7 @@
 * Relationships: Wife to Paddy, mum to Finlay and Ruaridh, owner of Max
 * Job: General Practitioner (GP), doctor.
 * Hobbies: Rock climbing
+* Appearance: Shoulder-length, naturally wavy medium-brown hair. Round face shape with soft features, blue eyes, and naturally rosy cheeks.
 
 ## Traits
 

@@ -1,4 +1,4 @@
-# Finlay
+# Character: Finlay
 
 Core Identity
 
@@ -6,6 +6,7 @@ Core Identity
 * Age: Baby (born March 2026).
 * Role: Ruaridh's baby brother.
 * Relationships: Ruaridh's baby brother, child to Bethan and Patrick
+* Appearance: Short, fine, wispy dark-brown hair. Large, round blue-grey eyes, a rounded face, and very full cheeks
 
 ## Traits
 

@@ -12,6 +12,7 @@ Before writing any story, you MUST read the context files in the authoring/ dire
 2. Determine Audience: Read the specific audience file requested (e.g., `authoring/audience/Ruaridh.md`).
 3. Determine Characters: Identify which characters are in the prompt and read their specific files in authoring/characters/*.md. Do not load characters that are not in the scene.
 4. Determine Theme: If a theme is requested (e.g., "adventure"), read the corresponding file in `authoring/themes/*.md`.
+5. Determine Setting: see `authoring/settings/*.md` if applicable.
 
 ## ✍️ Self-Updating Mandate
 
@@ -29,3 +30,9 @@ Generated book content lives under `books/`. Treat each story as its own project
 **Image prompts (`.cursor/rules/image-generation.mdc`):** When that rule applies, do not rely on chat-only prompt dumps. Write copy-paste-ready prompt text into the book’s `images/` folder—one Markdown file per illustration is typical (e.g. `images/page-1-image.md`, `images/chapter-2-spread.md`) so the author can open the file and paste into the image generation web UI. Put shared or session-level context (seed/style brief, character-sheet reminders, continuity notes) in `images/image-context.md` instead of repeating it in every per-image file.
 
 These books are prepared for **home print** (family hobby). In `BOOK.md`, insert an explicit **page-break marker** on its own line wherever a new printed page should begin—for example `<!-- pagebreak -->` or `[PAGE_BREAK]`—and keep the same convention within a book so layout or scripts can find breaks reliably.
+
+## Writing style
+
+- There's no need to mention a character's jobs or character traits unless relevant to the story
+  - Don't: "They huddle inside to sleep," Mum said, with her doctor's calm." - if her doctor role is not relevant to the rest of the story
+  - Do: "Mum used her stern doctor voice" - tongue in cheek, acceptable
