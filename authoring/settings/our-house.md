@@ -13,7 +13,8 @@
 ## Rooms
 
 * Large living room, divided in two by a toddler gate
-  * Kids' "zone" is in the side with the bay window. Full of toys. Has a play wall with climbing holds, busy boards, giant cog wheels, mirrors, etc.
+  * Kids' "zone" is in the side with the bay window. Full of toys. Has a play wall with climbing holds, busy boards, giant cog wheels,
+    mirrors, etc.
 * Dining room is contiguous with living room. French doors out to back garden with small patio
 * Kitchen connects to dining room, utility room, and downstairs hallway
 * Front door leads to downstairs hallway, stairs

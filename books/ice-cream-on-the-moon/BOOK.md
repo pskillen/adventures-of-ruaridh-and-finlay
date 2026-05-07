@@ -9,7 +9,7 @@ flying to on a Wednesday morning.
 
 The Moon Ice Cream Shop.
 
-<!-- pagebreak -->
+-----------
 
 ![[Illustration: The red and white rocket in space, exterior shot]](./images/spread-1.png)
 
@@ -30,7 +30,7 @@ round white thing is the moon. I have confirmed this with my nose. You're welcom
 
 "I know, Max," said Ruaridh. "I'm the captain."
 
-<!-- pagebreak -->
+-----------
 
 They were exactly halfway there when —
 
@@ -43,7 +43,7 @@ They were exactly halfway there when —
 The rocket shuddered from pointed nose to tail fin. The speed dial drooped sadly to the left. Three little red lights
 blinked on the dashboard: once, twice, three times.
 
-<!-- pagebreak -->
+-----------
 
 ![[Illustration: Wide interior shot — Ruaridh at the open engine hatch, Finlay watching, Max drifting in the background]](./images/spread-2.png)
 
@@ -67,7 +67,7 @@ meant: *yes, that's the one, I could smell it from here.*
 
 Finlay kicked both feet at once. This meant: *excellent engineering, big brother!*
 
-<!-- pagebreak -->
+-----------
 
 Ruaridh closed the hatch. He climbed back into the captain's seat, settled his hat, and placed both hands on the levers.
 
@@ -75,7 +75,7 @@ He took a very deep breath.
 
 He pressed the big green **GO** button.
 
-<!-- pagebreak -->
+-----------
 
 ![[Illustration: Rocket glowing back to life, Ruaridh cheering at controls, stars streaking past portholes]](./images/spread-3.png)
 
@@ -98,7 +98,7 @@ The moon filled the windscreen. And got bigger. And bigger. And **bigger** —
 
 They had landed.
 
-<!-- pagebreak -->
+-----------
 
 Outside the porthole: soft silver dust, a quiet sky, and Earth hanging above them like the biggest, most beautiful
 nightlight in the universe.
@@ -107,7 +107,7 @@ And right there, not far from the landing pad, a small round building with a gli
 
 The Moon Ice Cream Shop.
 
-<!-- pagebreak -->
+-----------
 
 ![[Illustration: Ruaridh, Finlay and Max outside the Moon Ice Cream Shop, eating ice cream on the moon's surface]](./images/spread-4.png)
 
