@@ -34,13 +34,20 @@ Generated book content lives under `books/`. Treat each story as its own project
 - **`images/`**: Final illustrations as PNGs in `books/<book-slug>/images/*.png`, plus prompt handoff files (see below).
 
 **Image prompts (`.cursor/rules/image-generation.mdc`):** When that rule applies, do not rely on chat-only prompt dumps.
-Write copy-paste-ready prompt text into the book’s `images/` folder—one Markdown file per illustration is typical (e.g.
-`images/page-1-image.md`, `images/chapter-2-spread.md`) so the author can open the file and paste into the image
-generation web UI. Put shared or session-level context (seed/style brief, character-sheet reminders, continuity notes)
-in `images/image-context.md` instead of repeating it in every per-image file.
+Write prompts into the book’s `images/` folder—one Markdown file per illustration (e.g. `images/page-1-image.md`,
+`images/spread-2-image.md`) using the format in that rule: YAML front matter + a fenced code block tagged `prompt` per scene, plus
+`images/image-context.md` for shared art direction (also with YAML front matter for defaults like model and aspect ratio).
+Put shared or session-level context (seed/style brief, character-sheet reminders, continuity notes) in `images/image-context.md`
+instead of repeating it in every per-image file.
+
+**Batch generation:** From the repo root, with `GEMINI_API_KEY` in `.env` (see `.env.example`), run
+`python scripts/generate_images.py books/<book-slug>` to call the Gemini API, download PNGs, and save them next to the prompt
+files. Options, troubleshooting, and venv setup are documented in [`scripts/README.md`](scripts/README.md).
+
+**Print PDF:** After illustrations exist, run `python scripts/build_booklet.py books/<book-slug>` to build a 16-page saddle-stitched A5 booklet (`output_booklet.pdf`). See [`scripts/README.md`](scripts/README.md) for fonts, spots, and layout options.
 
 These books are prepared for **home print** (family hobby). In `BOOK.md`, insert an explicit **page-break marker** on
-its own line wherever a new printed page should begin—for example `<!-- pagebreak -->` or `[PAGE_BREAK]`—and keep the
+its own line wherever a new printed page should begin—for example ----------- or `[PAGE_BREAK]` (but not a HTML comment). Keep the
 same convention within a book so layout or scripts can find breaks reliably.
 
 ## Writing style

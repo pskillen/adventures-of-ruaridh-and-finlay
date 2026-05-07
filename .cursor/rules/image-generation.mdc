@@ -2,51 +2,99 @@
 globs: books/**/*.md
 alwaysApply: false
 ---
-# Rule: AI Image Generation Handoff (Nano Banana 2)
+# Rule: AI Image Generation (Gemini)
 
 ## Context
-When writing stories, chapters, or scenes, we often need visual illustrations to accompany the text. Because this IDE cannot generate images directly, you (the AI) must prepare the text and output specific image-generation prompts for the user to copy/paste into the Gemini Web UI (using the Nano Banana 2 model).
+
+When drafting illustrated books, prepare prompts under each book’s `images/` folder so they can be run with the API script ([`scripts/generate_images.py`](../../scripts/generate_images.py), see [`scripts/README.md`](../../scripts/README.md)) or pasted into the Gemini web UI. The **session seed and every spread** are sent on each API call, so style does not drift on later images.
 
 ## Triggers
-Activate this skill whenever:
+
+Activate this rule whenever:
+
 1. The user explicitly asks for an image prompt.
-2. A natural break or highly visual moment occurs in the story being drafted (aim for roughly 1 illustration per major scene or chapter, unless instructed otherwise).
+2. A natural break or highly visual moment occurs in the story (aim for roughly one illustration per major scene or chapter, unless instructed otherwise).
 
-## Execution Steps
+## Execution steps
 
-### 1. Insert Text Placeholder
-When you identify the need for an image, insert a clear Markdown image placeholder directly into the story text. Use this exact format so the user knows where the generated image file will eventually go:
-`![[Illustration: Brief 3-4 word description]](./assets/pending-image-name.png)`
+### 1. Placeholder in `BOOK.md`
 
-### 2. Generate the Session Seed Prompt (If explicitly requested or starting a new book)
-Because Nano Banana 2 operates in a chat interface, it needs a "Seed Prompt" to lock in the art style, aspect ratio, and character designs for consistency. If the user is starting a new session, **save** this as `images/image-context.md` (or append under a `## Session seed` heading) and use the following template filled out with the story's context. You may also output a markdown block titled `### 🎨 Gemini Session Seed Prompt` in chat if helpful.
+When you need an illustration, insert a clear placeholder that points at the **final** asset path in the book’s `images/` folder, for example:
 
-> "I am creating illustrations for a children's book. For all image generation requests in this chat, please strictly adhere to the following style and character constraints:
-> 
-> **Art Style:** [Insert specific style, e.g., vibrant watercolor, classic Disney 2D, soft pastel picture book, Eric Carle collage style, etc.]
-> **Aspect Ratio:** [e.g., 16:9 for landscape spreads, 1:1 for square pages]
-> **Tone/Vibe:** [e.g., whimsical, slightly spooky, warm and cozy]
-> 
-> **Character Sheets:**
-> *   **[Character A Name]:** [Highly detailed physical description: age, hair color/style, specific clothing, distinguishing features].
-> *   **[Character B Name]:** [Highly detailed physical description].
-> 
-> Please acknowledge these constraints. I will provide the specific scenes next."
+`![[Illustration: Red rocket in space]](./images/spread-1.png)`
 
-### 3. Generate the Specific Image Prompt
-Hand off copy-paste-ready prompts as **Markdown files under this book’s `images/` directory** (see `AGENTS.md` → Story and book layout): one file per illustration is typical (e.g. `images/page-1-image.md`). Put shared/session context in `images/image-context.md` so per-image files stay short.
+(Use a short 3–4 word description in the `Illustration:` label. Match the filename to the corresponding `*-image.md` prompt file.)
 
-Each per-image file should include what the author needs to paste into the Gemini Web UI (and may mirror the structure below). You may still add a brief note in chat pointing at the saved path(s).
+### 2. `images/image-context.md` (book-level seed)
 
-Nano Banana 2 produces the best results with dense, descriptive language focusing on Subject, Action, Setting, and Lighting. It does not need the art style repeated if the Seed Prompt was used, but repeating core character traits ensures consistency. 
+Create or update `images/image-context.md` with:
 
-Format the **content** of each prompt file like this (adapt filenames to the book):
+1. **YAML front matter** (for automation) at the very top:
+   - `model` — e.g. `gemini-3.1-flash-image-preview` (Nano Banana 2 / image model you use in the project).
+   - `aspect_ratio` — e.g. `"4:3"`, `"16:9"`, `"1:1"`.
+2. **Body** — human-readable art direction: style, tone, character sheets, props, continuity notes. This entire body (after front matter) is sent to the API with **every** image request.
 
-**For Placeholder:** `[Brief 3-4 word description]`
-**Prompt for Gemini:** 
-> "Generate an image of [Character Name, repeating 2-3 core physical traits like 'a 6-year-old boy with messy red hair and a yellow raincoat'] [Action/Pose, e.g., reaching up to grab a glowing blue apple] in [Setting, e.g., a dense, misty forest with oversized ferns]. [Lighting/Atmosphere, e.g., warm dappled sunlight filtering through the canopy, magical glowing particles in the air]."
+### 3. One `*-image.md` file per illustration
 
-## Rules & Constraints
-*   **Never** attempt to write code to generate the image (no Python/Node scripts) unless explicitly asked.
-*   **Never** use raw DALL-E/Midjourney prompt jargon like "masterpiece, 8k, unreal engine, --v 6". Nano Banana 2 prefers natural, descriptive English.
-*   Always ensure the character descriptions in the prompt match the current state of the story (e.g., if the character fell in mud in the previous paragraph, include "covered in mud" in the prompt).
+For each image, add a file named like `spread-1-image.md` or `page-3-image.md` in the same `images/` folder.
+
+1. **Optional YAML front matter:**
+   - `output` — filename for the PNG (default: strip `-image` from the stem and add `.png`).
+   - `aspect_ratio` — override for this image only.
+   - `transparent` — if `true`, treat as a spot/cut-out: white-backdrop instruction + alpha post-process (see **Ancillary spot illustrations** below).
+   - `layout` / `facing` — print layout hints for [`scripts/build_booklet.py`](../../scripts/build_booklet.py) (`layout: stacked | image_only | text_only`, `facing: text_only` for a two-page spread).
+   - `reference_images` — optional list of PNG paths **relative to `images/`** (e.g. earlier spreads for manual style anchoring). The API script can also add references automatically with `--auto-reference`.
+2. **Title and notes** — e.g. `# Spread 1`, `**For placeholder:** …` (for humans and for `BOOK.md` cross-checks).
+3. **Canonical prompt** — a fenced block tagged `prompt` (this is what the API script sends as the scene instruction):
+
+````markdown
+```prompt
+Generate a picture-book illustration: …
+```
+````
+
+The script falls back to the first Markdown blockquote (`>` lines) if the fence is missing (legacy files).
+
+Per-image prompts should stay dense: subject, action, setting, lighting. **Nano Banana / Gemini** prefers natural descriptive English. Avoid Midjourney-style tokens (“masterpiece”, “8k”, `--v 6`).
+
+### Ancillary spot illustrations (transparent PNGs)
+
+Use small **spot** images on the **text-facing** page to highlight a key object (the goal, the broken thing, the fixed thing, something to find in the scene). They are **not** full-bleed spreads.
+
+1. **Naming** — one prompt file per spot, next to the main spread prompt:
+
+   - Main spread: `spread-N-image.md` → `spread-N.png`
+   - Spots: `spread-N-spot-1-image.md` → `spread-N-spot-1.png`, `spread-N-spot-2-image.md` → `spread-N-spot-2.png`, …
+
+2. **Required front matter on each spot file:**
+
+   ```yaml
+   ---
+   transparent: true
+   aspect_ratio: "1:1"
+   placement: auto
+   scale: 0.35
+   ---
+   ```
+
+   - `transparent: true` — the generator adds a white-backdrop instruction and post-processes the PNG to **alpha** (near-white → transparent). Keep the fenced `prompt` focused on a **single** subject.
+   - `aspect_ratio` — spots are often square (`1:1`); override as needed.
+   - `placement` / `scale` — consumed by [`scripts/build_booklet.py`](../../scripts/build_booklet.py) when placing spots on the text page (`auto`, `top`, `bottom`, `left`, `right`; scale is a fraction of the page short side).
+
+3. **Prompt** — In the fenced `prompt` code block, describe the object clearly and state that it must sit **isolated on pure white** with **no shadow, frame, or border** (the script also appends a hardening sentence when `transparent: true`).
+
+4. **Layout (main spread file)** — Optional keys on `spread-N-image.md`:
+
+   - `layout: stacked | image_only | text_only` — default `stacked` (image + text on one A5 page).
+   - `facing: text_only` — this spread becomes **two** booklet pages: full-page illustration (`image_only`) + facing **text** page that carries the story text and all `spread-N-spot-*.png` files.
+
+### 4. Automation vs web UI
+
+- **Recommended:** run `python scripts/generate_images.py books/<slug>` after prompts exist (see [`scripts/README.md`](../../scripts/README.md)).
+- **Manual:** paste `image-context.md` seed once, then each scene’s prompt body (from the fenced block tagged `prompt`) into the Gemini web UI in order.
+
+## Rules and constraints
+
+- Prefer extending **[`scripts/generate_images.py`](../../scripts/generate_images.py)** over inventing one-off throwaway image scripts in book folders.
+- Keep character appearance aligned with the story state (mud, costume changes, etc.).
+- Keep `images/image-context.md` the single source for repeated style/character rules; put scene-specific action only in each `*-image.md` fenced `prompt` block.

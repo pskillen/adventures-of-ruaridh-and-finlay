@@ -24,25 +24,36 @@ do this.
 
 ### Images
 
-Images are generated separately using **Gemini (Nano Banana 2)** via the web UI — the AI can't generate images directly
-in Cursor. Each book's `images/` folder contains:
+Images are produced with **Gemini** (image-capable models such as Nano Banana 2). The AI in Cursor prepares prompts; **batch
+generation** uses [`scripts/generate_images.py`](scripts/generate_images.py) (see [`scripts/README.md`](scripts/README.md)).
 
-- `image-context.md` — a session seed prompt (art style, character descriptions, aspect ratio) to paste at the start of
-  a Gemini chat
-- `spread-N-image.md` — one file per illustration, ready to copy-paste into Gemini
+Use the project virtualenv at `venv/`:
 
-Once generated, images are saved as `spread-N.png` in the same folder.
+```bash
+source venv/bin/activate
+pip install -r scripts/requirements.txt
+# Copy .env.example to .env and set GEMINI_API_KEY
+python scripts/generate_images.py books/<your-book-slug>
+```
+
+Each book's `images/` folder contains:
+
+- `image-context.md` — shared art direction with YAML front matter (`model`, `aspect_ratio`) plus the session seed text
+- `spread-N-image.md` (or `page-N-image.md`) — one file per illustration with optional front matter and a fenced code block tagged `prompt`
+
+Generated PNGs are written next to the prompts (e.g. `spread-N.png`). You can still paste prompts into the Gemini web UI if
+you prefer.
 
 ### Printing
 
-`BOOK.md` in each book folder is the print-ready manuscript. Page breaks are marked with `<!-- pagebreak -->`. Layout is
+`BOOK.md` in each book folder is the print-ready manuscript. Page breaks are marked with `-----------`. Layout is
 manual.
 
 ---
 
 ## Repo structure
 
-```
+```text
 authoring/          context files for the AI agent
   characters/       one file per character
   audience/         one file per reader (Ruaridh, Finlay)
